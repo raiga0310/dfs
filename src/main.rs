@@ -48,7 +48,7 @@ fn depth_first_search(start: usize, goal: usize) -> Vec<usize> {
         let leaves = tree[src].children.clone();
         println!("expand: {leaves:?}");
 
-        list = leaves.iter().cloned().chain(list).collect();
+        list = leaves.into_iter().chain(list).collect();
         println!("generate: {list:?}");
     }
     answer // todo
