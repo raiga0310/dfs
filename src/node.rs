@@ -21,6 +21,9 @@ const RADIX: u32 = 10;
 pub fn generate_graph(contents: String) -> Vec<Node> {
     let mut graph = vec![];
     for node_info in contents.split('\n') {
+        if node_info.starts_with("//") {
+            continue;
+        }
         let node_info: Vec<usize> = node_info
             .chars()
             .filter(|c| !c.is_whitespace())

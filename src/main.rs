@@ -19,16 +19,18 @@ fn main() {
 fn depth_first_search(start: usize, goal: usize) -> Vec<usize> {
     let tree: Vec<Node> = tree_from_file(FILENAME);
     let mut answer: Vec<usize> = vec![];
-    let mut list: Vec<usize> = vec![start];
+    let mut open_list: Vec<usize> = vec![start];
+    let mut close_list: Vec<usize> = vec![];
     let mut src;
     loop {
-        if list.is_empty() {
+        if open_list.is_empty() {
             break;
         }
 
         // select
-        src = list.remove(0);
-        println!("select: {src}, list: {list:?}");
+        src = open_list.remove(0);
+        close_list.push(src);
+        println!("select: {src}, open_list: {open_list:?}, close_list: {close_list:?}");
 
         if src == goal {
             println!("----- reached the goal!! -----");
@@ -45,11 +47,17 @@ fn depth_first_search(start: usize, goal: usize) -> Vec<usize> {
         }
 
         //expand
-        let leaves = tree[src].children.clone();
+        let leaves: Vec<usize> = tree[src]
+            .children
+            .clone()
+            .iter()
+            .cloned()
+            .filter(|leaf| !(close_list.contains(leaf) || open_list.contains(leaf)))
+            .collect();
         println!("expand: {leaves:?}");
 
-        list = leaves.into_iter().chain(list).collect();
-        println!("generate: {list:?}");
+        open_list = leaves.into_iter().chain(open_list).collect();
+        println!("generate: {open_list:?}");
     }
     answer // todo
 }
